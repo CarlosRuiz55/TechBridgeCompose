@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softdevelopers.techbridge_compose.ui.theme.TechBridge_composeTheme
+import com.softdevelopers.techbridge_compose.ui.theme.lilitaone
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,8 +91,8 @@ fun MainScreen() {
         // Texto de pie de página
         Text(
             text = stringResource(R.string.softdevelopers),
-            fontSize = 18.sp,
-            fontFamily = FontFamily.Serif,
+            fontSize = 22.sp,
+            fontFamily = lilitaone,
             color = Color.Blue,
             textAlign = TextAlign.Center,
             modifier = Modifier
@@ -101,7 +102,7 @@ fun MainScreen() {
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     TechBridge_composeTheme {

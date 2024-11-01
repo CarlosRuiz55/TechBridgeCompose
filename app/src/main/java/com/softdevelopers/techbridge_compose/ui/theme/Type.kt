@@ -1,10 +1,18 @@
 package com.softdevelopers.techbridge_compose.ui.theme
 
+
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.softdevelopers.techbridge_compose.R
+
+//Importamos la fuente de la aplicacion "LILITA-ONE"
+val lilitaone = FontFamily(
+   Font(R.font.lilitaone_regular, FontWeight.Bold)
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
