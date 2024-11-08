@@ -31,6 +31,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -94,17 +95,19 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun AppContent(modifier: Modifier = Modifier) {
     var showWelcomeScreen by remember { mutableStateOf(true) }
+    var isLoggedIn by remember { mutableStateOf(false) }
 
-    // Usar LaunchedEffect para establecer el retardo de 3 segundos
     LaunchedEffect(Unit) {
-        delay(3000) // Espera 3 segundos
-        showWelcomeScreen = false // Cambia a la pantalla de login
+        delay(3000)
+        showWelcomeScreen = false
     }
 
     if (showWelcomeScreen) {
-        MainScreen() // Pantalla de bienvenida
+        MainScreen()
+    } else if (isLoggedIn) {
+        MenuScreen() // Muestra la pantalla del menú después del inicio de sesión exitoso
     } else {
-        LoginScreen() // Pantalla de inicio de sesión
+        LoginScreen(onLoginSuccess = { isLoggedIn = true }) // Redirige a MenuScreen después del login
     }
 }
 
@@ -149,11 +152,18 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize()) {
-        var username by remember { mutableStateOf("") }
-        var password by remember { mutableStateOf("") }
+fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
+    // Definir lista de usuarios válidos
+    val validUsers = listOf(
+        "carlos" to "12345",
+        "user1" to "password1"
+    )
 
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var loginError by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -164,16 +174,13 @@ fun LoginScreen(modifier: Modifier = Modifier) {
         ) {
             // Logo
             Image(
-                painter = painterResource(id = R.drawable.logo1), 
+                painter = painterResource(id = R.drawable.logo1),
                 contentDescription = "Logo",
                 modifier = Modifier
                     .width(286.dp)
                     .height(118.dp)
                     .offset(y = -70.dp)
             )
-
-
-
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -185,20 +192,19 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier.align(Alignment.Start),
                 color = Color.Black,
                 fontFamily = CustomFont
-
             )
             OutlinedTextField(
                 value = username,
                 onValueChange = { username = it },
-                placeholder = { Text(text = "Username", color = Color.Black ) },
+                placeholder = { Text(text = "Username", color = Color.Black) },
                 singleLine = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(50.dp),
-                colors = outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF007AFF), // Color del borde cuando está enfocado
-                    unfocusedBorderColor = Color.Gray      // Color del borde cuando no está enfocado
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF007AFF),
+                    unfocusedBorderColor = Color.Gray
                 )
             )
 
@@ -223,9 +229,9 @@ fun LoginScreen(modifier: Modifier = Modifier) {
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),
                 shape = RoundedCornerShape(50.dp),
-                colors = outlinedTextFieldColors(
-                    focusedBorderColor = Color(0xFF007AFF), // Color del borde cuando está enfocado
-                    unfocusedBorderColor = Color.Gray     // Color del borde cuando no está enfocado
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = Color(0xFF007AFF),
+                    unfocusedBorderColor = Color.Gray
                 )
             )
 
@@ -233,10 +239,14 @@ fun LoginScreen(modifier: Modifier = Modifier) {
 
             // Botón de inicio de sesión
             Button(
-                onClick = { /* Acción de inicio de sesión */ },
+                onClick = {
+                    loginError = !validUsers.any { it.first == username && it.second == password }
+                    if (!loginError) {
+                        onLoginSuccess()
+                    }
+                },
                 modifier = Modifier
                     .fillMaxWidth(0.7f)
-                    .offset(y = 0.dp)
                     .height(50.dp),
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(Color.Blue)
@@ -245,6 +255,14 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            if (loginError) {
+                Text(
+                    text = "Usuario o contraseña incorrectos",
+                    color = Color.Red,
+                    fontSize = 14.sp
+                )
+            }
 
             // Nombre de la empresa
             Text(
@@ -278,6 +296,7 @@ fun MenuScreen() {
             modifier = Modifier
                 .size(36.dp)
                 .align(Alignment.Start)
+                .offset(y = 30.dp)
                 .clickable { /* Acción para retroceder */ }
         )
 
