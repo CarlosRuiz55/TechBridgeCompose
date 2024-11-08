@@ -89,6 +89,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
+
 //Esto es una solución para crear una pantalla de bienvenida temporal que,
 // después de un breve retraso, cambia automáticamente a una pantalla de inicio de sesión sin
 // requerir interacción del usuario.
@@ -352,6 +353,7 @@ fun MenuScreen() {
     )
 }
 
+//Pantalla del menu
 @Composable
 fun MenuOption(iconId: Int, text: String, textColor: Color) {
     Card(
@@ -393,11 +395,148 @@ fun MenuOption(iconId: Int, text: String, textColor: Color) {
         }
     }
 }
+@Composable
+fun ConsultasScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        // Icono de retroceso en la parte superior izquierda
+        Icon(
+            painter = painterResource(id = R.drawable.iconback), // Cambia 'iconback' por el ícono correcto de regreso
+            contentDescription = "Back",
+            tint = Color(0xFF007AFF),
+            modifier = Modifier
+                .size(36.dp)
+                .align(Alignment.Start)
+                .offset(y = 30.dp)
+                .clickable { /* Acción para retroceder */ }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Título del menú
+        Text(
+            text = "Consultas",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF007AFF),
+            fontFamily = CustomFont
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Opciones del menú
+        MenuOption(
+            iconId = R.drawable.icondashboard,
+            text = "Consulta 1",
+            textColor = Color(0xFF007AFF)
+        )
+
+        MenuOption(
+            iconId = R.drawable.iconconfig,
+            text = "Consulta 2",
+            textColor = Color(0xFF007AFF)
+        )
+
+        MenuOption(
+            iconId = R.drawable.iconacerca,
+            text = "Consulta 3",
+            textColor = Color(0xFF007AFF)
+        )
+
+        MenuOption(
+            iconId = R.drawable.iconcerrarsesion,
+            text = "Consulta 4",
+            textColor = Color(0xFF007AFF)
+        )
+        MenuOption(
+            iconId = R.drawable.iconcerrarsesion,
+            text = "Consulta 5",
+            textColor = Color(0xFF007AFF)
+        )
+        MenuOption(
+            iconId = R.drawable.iconcerrarsesion,
+            text = "Consulta 6",
+            textColor = Color(0xFF007AFF)
+        )
+        MenuOption(
+            iconId = R.drawable.iconcerrarsesion,
+            text = "Consulta 7",
+            textColor = Color(0xFF007AFF)
+        )
+        MenuOption(
+            iconId = R.drawable.iconcerrarsesion,
+            text = "Consulta 8",
+            textColor = Color(0xFF007AFF)
+        )
+    }
+    Spacer(modifier = Modifier.height(1.dp))
+//    // Nombre de la empresa
+//    Text(
+//        text = "SoftDevelopers",
+//        fontSize = 18.sp,
+//        color = Color.Blue,
+//        textAlign = TextAlign.Center,
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .offset(y = 720.dp),
+//        fontFamily = CustomFont
+//    )
+}
+
+//Pantalla del menu
+@Composable
+fun ConsultasOption(iconId: Int, text: String, textColor: Color) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(2.dp, Color(0xFF007AFF)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { /* Acción al hacer clic en la opción */ },
+
+        ) {
+        // Caja interna con fondo blanco
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = iconId),
+                    contentDescription = text,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = text,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                    fontFamily = CustomFont
+                )
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     TechBridge_composeTheme {
-        MenuScreen()
+        //MenuScreen()
+        ConsultasScreen()
     }
 }
