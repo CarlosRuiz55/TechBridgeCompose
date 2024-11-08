@@ -5,12 +5,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,6 +29,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -33,6 +37,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +58,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.softdevelopers.techbridge_compose.ui.theme.TechBridge_composeTheme
 import com.softdevelopers.techbridge_compose.ui.theme.lilitaone
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +67,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TechBridge_composeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(
+                    AppContent( // Llama a AppContent para manejar el flujo de bienvenida y login
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -82,44 +88,66 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         modifier = modifier
     )
 }
-//Pantalla de bienvenida de la aplicacion
+//Esto es una solución para crear una pantalla de bienvenida temporal que,
+// después de un breve retraso, cambia automáticamente a una pantalla de inicio de sesión sin
+// requerir interacción del usuario.
 @Composable
+fun AppContent(modifier: Modifier = Modifier) {
+    var showWelcomeScreen by remember { mutableStateOf(true) }
 
-fun MainScreen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        // Imagen del logo sin Card
-        Image(
-            painter = painterResource(id = R.drawable.logo1),
-            contentDescription = stringResource(R.string.logodetechbridge),
-            modifier = Modifier
-                .width(286.dp)
-                .height(118.dp)
-                .padding(vertical = 0.dp)
-                .offset(y = -70.dp)
-        )
+    // Usar LaunchedEffect para establecer el retardo de 3 segundos
+    LaunchedEffect(Unit) {
+        delay(3000) // Espera 3 segundos
+        showWelcomeScreen = false // Cambia a la pantalla de login
+    }
 
-        Spacer(modifier = Modifier.height(50.dp))
-
-        // Texto de pie de página
-        Text(
-            text = stringResource(R.string.softdevelopers),
-            fontSize = 22.sp,
-            fontFamily = CustomFont,
-            color = Color.Blue,
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .offset(y = 230.dp)
-        )
+    if (showWelcomeScreen) {
+        MainScreen() // Pantalla de bienvenida
+    } else {
+        LoginScreen() // Pantalla de inicio de sesión
     }
 }
 
+//Pantalla de bienvenida de la aplicacion
+@Composable
+fun MainScreen(modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Imagen del logo sin Card
+            Image(
+                painter = painterResource(id = R.drawable.logo1),
+                contentDescription = stringResource(R.string.logodetechbridge),
+                modifier = Modifier
+                    .width(286.dp)
+                    .height(118.dp)
+                    .padding(vertical = 0.dp)
+                    .offset(y = -70.dp)
+            )
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+            // Texto de pie de página
+            Text(
+                text = stringResource(R.string.softdevelopers),
+                fontSize = 18.sp,
+                fontFamily = CustomFont,
+                color = Color.Blue,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .offset(y = 230.dp)
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -136,7 +164,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
         ) {
             // Logo
             Image(
-                painter = painterResource(id = R.drawable.logo1), // Cambia a tu logo en drawable
+                painter = painterResource(id = R.drawable.logo1), 
                 contentDescription = "Logo",
                 modifier = Modifier
                     .width(286.dp)
@@ -221,7 +249,7 @@ fun LoginScreen(modifier: Modifier = Modifier) {
             // Nombre de la empresa
             Text(
                 text = "SoftDevelopers",
-                fontSize = 14.sp,
+                fontSize = 18.sp,
                 color = Color.Blue,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
@@ -232,17 +260,125 @@ fun LoginScreen(modifier: Modifier = Modifier) {
         }
     }
 }
+@Composable
+fun MenuScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
+    ) {
+        // Icono de retroceso en la parte superior izquierda
+        Icon(
+            painter = painterResource(id = R.drawable.iconback), // Cambia 'iconback' por el ícono correcto de regreso
+            contentDescription = "Back",
+            tint = Color(0xFF007AFF),
+            modifier = Modifier
+                .size(36.dp)
+                .align(Alignment.Start)
+                .clickable { /* Acción para retroceder */ }
+        )
 
+        Spacer(modifier = Modifier.height(16.dp))
 
+        // Título del menú
+        Text(
+            text = "Menu",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF007AFF),
+            fontFamily = CustomFont
+        )
 
+        Spacer(modifier = Modifier.height(24.dp))
 
+        // Opciones del menú
+        MenuOption(
+            iconId = R.drawable.icondashboard,
+            text = "Consultas",
+            textColor = Color(0xFF007AFF)
+        )
 
+        MenuOption(
+            iconId = R.drawable.iconconfig,
+            text = "Configuraciones",
+            textColor = Color(0xFF007AFF)
+        )
+
+        MenuOption(
+            iconId = R.drawable.iconacerca,
+            text = "Acerca De",
+            textColor = Color(0xFF007AFF)
+        )
+
+        MenuOption(
+            iconId = R.drawable.iconcerrarsesion,
+            text = "Cerrar Sesión",
+            textColor = Color.Red
+        )
+    }
+    Spacer(modifier = Modifier.height(1.dp))
+    // Nombre de la empresa
+    Text(
+        text = "SoftDevelopers",
+        fontSize = 18.sp,
+        color = Color.Blue,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(y = 720.dp),
+        fontFamily = CustomFont
+    )
+}
+
+@Composable
+fun MenuOption(iconId: Int, text: String, textColor: Color) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(2.dp, Color(0xFF007AFF)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable { /* Acción al hacer clic en la opción */ },
+
+    ) {
+        // Caja interna con fondo blanco
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = iconId),
+                    contentDescription = text,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = text,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                    fontFamily = CustomFont
+                )
+            }
+        }
+    }
+}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     TechBridge_composeTheme {
-        //MainScreen()
-        LoginScreen()
+        MenuScreen()
     }
 }
