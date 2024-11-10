@@ -23,9 +23,12 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -48,6 +51,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -93,6 +98,7 @@ fun AppContent(modifier: Modifier = Modifier) {
     var isLoggedIn by remember { mutableStateOf(false) }
     var showConsultasScreen by remember { mutableStateOf(false) }
 
+
     LaunchedEffect(Unit) {
         delay(3000)
         showWelcomeScreen = false
@@ -100,7 +106,12 @@ fun AppContent(modifier: Modifier = Modifier) {
 
     when {
         showWelcomeScreen -> MainScreen()
-        showConsultasScreen -> ConsultasMongoScreen() // Pantalla de consultas
+        showConsultasScreen -> ConsultasMongoScreen(
+            onBack = { showConsultasScreen = false } // Regresa al MenuScreen
+
+        )
+
+        // Pantalla de consultas
         isLoggedIn -> MenuScreen(
             onConsultasClick = { showConsultasScreen = true } // Navega a ConsultasScreen
         )
@@ -372,13 +383,20 @@ fun MenuOption(iconId: Int, text: String, textColor: Color, onClick: () -> Unit 
 }
 
 @Composable
-fun ConsultasMongoScreen() {
+fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
     var selectedScreen by remember { mutableStateOf<String?>(null) }
 
     when (selectedScreen) {
         "Consulta1" -> Consulta1Screen()
         "Consulta2" -> Consulta2Screen()
         "Consulta3" -> Consulta3Screen()
+        "Consulta4" -> Consulta4Screen()
+        "Consulta5" -> Consulta5Screen()
+        "Consulta6" -> Consulta6Screen()
+        "Consulta7" -> Consulta7Screen()
+        "Consulta8" -> Consulta8Screen()
+        "Consulta9" -> Consulta9Screen()
+        "Consulta10" -> Consulta10Screen()
         else -> {
             Column(
                 modifier = Modifier
@@ -394,7 +412,7 @@ fun ConsultasMongoScreen() {
                         .size(36.dp)
                         .align(Alignment.Start)
                         .offset(y = 30.dp)
-                        .clickable { selectedScreen = null }
+                        .clickable { onBack() }
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -439,7 +457,62 @@ fun ConsultasMongoScreen() {
                             onClick = { selectedScreen = "Consulta3" }
                         )
                     }
-                    // Agregar más opciones según sea necesario
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta4",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta4" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta5",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta5" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta6",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta6" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta7",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta7" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta8",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta8" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta9",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta9" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta10",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta10" }
+                        )
+                    }
                 }
             }
         }
@@ -486,18 +559,119 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
     }
 }
 
-
 @Composable
 fun Consulta1Screen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+            .padding(16.dp)
     ) {
-        Text(text = "Consulta 1", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+        Icon(
+            painter = painterResource(id = R.drawable.iconback),
+            contentDescription = "Back",
+            tint = Color(0xFF007AFF),
+            modifier = Modifier
+                .size(36.dp)
+                .align(Alignment.Start)
+                .offset(y = 30.dp)
+                .clickable { }
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Top 5 Proyectos Más Caros 2024-2025 por Margen de Ganancia",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF007AFF),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 40.dp) // Ajusta el valor según sea necesario
+                .align(Alignment.End)
+                .offset(y = -20.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(bottom = 16.dp)
+        ) {
+            items(10) { // Cambia este valor según la cantidad de datos
+                ProjectItem(
+                    proyectoId = "proj010",
+                    nombreProyecto = "SmartHome",
+                    fechaInicio = "2024-08-01",
+                    fechaFin = "2025-04-01",
+                    margenGanancia = 23000
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun ProjectItem(
+    proyectoId: String,
+    nombreProyecto: String,
+    fechaInicio: String,
+    fechaFin: String,
+    margenGanancia: Int
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)),
+        elevation = CardDefaults.cardElevation(4.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.iconempleado), // Usa tu propio ícono de empleado
+                contentDescription = "Empleado",
+                modifier = Modifier
+                    .size(48.dp)
+                    .padding(end = 16.dp)
+            )
+
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = nombreProyecto,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF333333)
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "ID: $proyectoId",
+                    fontSize = 14.sp,
+                    color = Color(0xFF666666)
+                )
+
+                Text(
+                    text = "Inicio: $fechaInicio - Fin: $fechaFin",
+                    fontSize = 14.sp,
+                    color = Color(0xFF666666)
+                )
+
+                Text(
+                    text = "Ganancia: $margenGanancia",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF007AFF)
+                )
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+        }
     }
 }
 
@@ -531,46 +705,105 @@ fun Consulta3Screen() {
 
 @Composable
 fun Consulta4Screen() {
-    Text("Contenido de Consulta 4")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 4", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
 
 @Composable
 fun Consulta5Screen() {
-    Text("Contenido de Consulta 5")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 5", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
 
 @Composable
 fun Consulta6Screen() {
-    Text("Contenido de Consulta 6")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 6", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
-
 @Composable
 fun Consulta7Screen() {
-    Text("Contenido de Consulta 7")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 7", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
-
 @Composable
 fun Consulta8Screen() {
-    Text("Contenido de Consulta 8")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 8", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
 
 @Composable
 fun Consulta9Screen() {
-    Text("Contenido de Consulta 9")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 9", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
 
 @Composable
 fun Consulta10Screen() {
-    Text("Contenido de Consulta 10")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 10", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
 }
-
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     TechBridge_composeTheme {
         //MainScreen()
-        ConsultasMongoScreen()
+        Consulta1Screen()
     }
 }
