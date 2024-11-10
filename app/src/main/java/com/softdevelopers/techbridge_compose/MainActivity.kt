@@ -13,6 +13,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
@@ -57,6 +59,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.softdevelopers.techbridge_compose.ui.theme.TechBridge_composeTheme
 import com.softdevelopers.techbridge_compose.ui.theme.lilitaone
 import kotlinx.coroutines.delay
@@ -68,7 +74,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TechBridge_composeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    AppContent( // Llama a AppContent para manejar el flujo de bienvenida y login
+                    AppContent(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -77,42 +83,31 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//Declaramos la fuente importada y esta la podemos llamar cada ves que querramos mediante CustomFont
 val CustomFont = FontFamily(
     Font(R.font.lilitaone_regular)
 )
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-//Esto es una solución para crear una pantalla de bienvenida temporal que,
-// después de un breve retraso, cambia automáticamente a una pantalla de inicio de sesión sin
-// requerir interacción del usuario.
-@Composable
 fun AppContent(modifier: Modifier = Modifier) {
     var showWelcomeScreen by remember { mutableStateOf(true) }
     var isLoggedIn by remember { mutableStateOf(false) }
+    var showConsultasScreen by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         delay(3000)
         showWelcomeScreen = false
     }
 
-    if (showWelcomeScreen) {
-        MainScreen()
-    } else if (isLoggedIn) {
-        MenuScreen() // Muestra la pantalla del menú después del inicio de sesión exitoso
-    } else {
-        LoginScreen(onLoginSuccess = { isLoggedIn = true }) // Redirige a MenuScreen después del login
+    when {
+        showWelcomeScreen -> MainScreen()
+        showConsultasScreen -> ConsultasMongoScreen() // Pantalla de consultas
+        isLoggedIn -> MenuScreen(
+            onConsultasClick = { showConsultasScreen = true } // Navega a ConsultasScreen
+        )
+        else -> LoginScreen(onLoginSuccess = { isLoggedIn = true })
     }
 }
 
-//Pantalla de bienvenida de la aplicacion
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
@@ -123,7 +118,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Imagen del logo sin Card
             Image(
                 painter = painterResource(id = R.drawable.logo1),
                 contentDescription = stringResource(R.string.logodetechbridge),
@@ -136,7 +130,6 @@ fun MainScreen(modifier: Modifier = Modifier) {
 
             Spacer(modifier = Modifier.height(50.dp))
 
-            // Texto de pie de página
             Text(
                 text = stringResource(R.string.softdevelopers),
                 fontSize = 18.sp,
@@ -154,12 +147,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
-    // Definir lista de usuarios válidos
-    val validUsers = listOf(
-        "carlos" to "12345",
-        "user1" to "password1"
-    )
-
+    val validUsers = listOf("carlos" to "12345", "user1" to "password1")
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginError by remember { mutableStateOf(false) }
@@ -173,7 +161,6 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // Logo
             Image(
                 painter = painterResource(id = R.drawable.logo1),
                 contentDescription = "Logo",
@@ -185,7 +172,6 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Campo de usuario
             Text(
                 text = "Username",
                 fontSize = 16.sp,
@@ -211,7 +197,6 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Campo de contraseña
             Text(
                 text = "Password",
                 fontSize = 16.sp,
@@ -238,7 +223,6 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón de inicio de sesión
             Button(
                 onClick = {
                     loginError = !validUsers.any { it.first == username && it.second == password }
@@ -265,7 +249,6 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
                 )
             }
 
-            // Nombre de la empresa
             Text(
                 text = "SoftDevelopers",
                 fontSize = 18.sp,
@@ -279,8 +262,9 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
         }
     }
 }
+
 @Composable
-fun MenuScreen() {
+fun MenuScreen(onConsultasClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -289,9 +273,8 @@ fun MenuScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        // Icono de retroceso en la parte superior izquierda
         Icon(
-            painter = painterResource(id = R.drawable.iconback), // Cambia 'iconback' por el ícono correcto de regreso
+            painter = painterResource(id = R.drawable.iconback),
             contentDescription = "Back",
             tint = Color(0xFF007AFF),
             modifier = Modifier
@@ -303,7 +286,6 @@ fun MenuScreen() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Título del menú
         Text(
             text = "Menu",
             fontSize = 24.sp,
@@ -314,24 +296,32 @@ fun MenuScreen() {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Opciones del menú
         MenuOption(
             iconId = R.drawable.icondashboard,
-            text = "Consultas",
-            textColor = Color(0xFF007AFF)
+            text = "Consultas de mongo",
+            textColor = Color(0xFF007AFF),
+            onClick = onConsultasClick // Llama a ConsultasScreen al hacer clic
+        )
+        MenuOption(
+            iconId = R.drawable.iconssas,
+            text = "Consultas del modelo tabular",
+            textColor = Color(0xFF007AFF),
+            onClick = onConsultasClick // Llama a ConsultasScreen al hacer clic
         )
 
         MenuOption(
             iconId = R.drawable.iconconfig,
             text = "Configuraciones",
-            textColor = Color(0xFF007AFF)
+            textColor = Color(0xFF007AFF),
+            onClick = onConsultasClick // Llama a ConsultasScreen al hacer clic
         )
 
         MenuOption(
             iconId = R.drawable.iconacerca,
             text = "Acerca De",
-            textColor = Color(0xFF007AFF)
-        )
+            textColor = Color(0xFF007AFF),
+
+            )
 
         MenuOption(
             iconId = R.drawable.iconcerrarsesion,
@@ -339,33 +329,18 @@ fun MenuScreen() {
             textColor = Color.Red
         )
     }
-    Spacer(modifier = Modifier.height(1.dp))
-    // Nombre de la empresa
-    Text(
-        text = "SoftDevelopers",
-        fontSize = 18.sp,
-        color = Color.Blue,
-        textAlign = TextAlign.Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .offset(y = 720.dp),
-        fontFamily = CustomFont
-    )
 }
 
-//Pantalla del menu
 @Composable
-fun MenuOption(iconId: Int, text: String, textColor: Color) {
+fun MenuOption(iconId: Int, text: String, textColor: Color, onClick: () -> Unit = {}) {
     Card(
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(2.dp, Color(0xFF007AFF)),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
-            .clickable { /* Acción al hacer clic en la opción */ },
-
+            .clickable(onClick = onClick),
     ) {
-        // Caja interna con fondo blanco
         Box(
             modifier = Modifier
                 .background(Color.White)
@@ -395,148 +370,207 @@ fun MenuOption(iconId: Int, text: String, textColor: Color) {
         }
     }
 }
+
 @Composable
-fun ConsultasScreen() {
+fun ConsultasMongoScreen() {
+    var selectedScreen by remember { mutableStateOf<String?>(null) }
+
+    when (selectedScreen) {
+        "Consulta1" -> Consulta1Screen()
+        "Consulta2" -> Consulta2Screen()
+        "Consulta3" -> Consulta3Screen()
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.iconback),
+                    contentDescription = "Back",
+                    tint = Color(0xFF007AFF),
+                    modifier = Modifier
+                        .size(36.dp)
+                        .align(Alignment.Start)
+                        .offset(y = 30.dp)
+                        .clickable { selectedScreen = null }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Consultas",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF007AFF),
+                    fontFamily = CustomFont,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.icondashboard,
+                            text = "Consultas1",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta1" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconconfig,
+                            text = "Consulta2",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta2" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconacerca,
+                            text = "Consulta3",
+                            textColor = Color(0xFF007AFF),
+                            onClick = { selectedScreen = "Consulta3" }
+                        )
+                    }
+                    // Agregar más opciones según sea necesario
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> Unit = {}) {
+    Card(
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(2.dp, Color(0xFF007AFF)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .clickable(onClick = onClick),
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.White)
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    painter = painterResource(id = iconId),
+                    contentDescription = text,
+                    tint = Color.Unspecified,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = text,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = textColor,
+                    fontFamily = CustomFont
+                )
+            }
+        }
+    }
+}
+
+
+@Composable
+fun Consulta1Screen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+        verticalArrangement = Arrangement.Center
     ) {
-        // Icono de retroceso en la parte superior izquierda
-        Icon(
-            painter = painterResource(id = R.drawable.iconback), // Cambia 'iconback' por el ícono correcto de regreso
-            contentDescription = "Back",
-            tint = Color(0xFF007AFF),
-            modifier = Modifier
-                .size(36.dp)
-                .align(Alignment.Start)
-                .offset(y = 30.dp)
-                .clickable { /* Acción para retroceder */ }
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Título del menú
-        Text(
-            text = "Consultas",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF007AFF),
-            fontFamily = CustomFont
-        )
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Opciones del menú
-        MenuOption(
-            iconId = R.drawable.icondashboard,
-            text = "Consulta 1",
-            textColor = Color(0xFF007AFF)
-        )
-
-        MenuOption(
-            iconId = R.drawable.iconconfig,
-            text = "Consulta 2",
-            textColor = Color(0xFF007AFF)
-        )
-
-        MenuOption(
-            iconId = R.drawable.iconacerca,
-            text = "Consulta 3",
-            textColor = Color(0xFF007AFF)
-        )
-
-        MenuOption(
-            iconId = R.drawable.iconcerrarsesion,
-            text = "Consulta 4",
-            textColor = Color(0xFF007AFF)
-        )
-        MenuOption(
-            iconId = R.drawable.iconcerrarsesion,
-            text = "Consulta 5",
-            textColor = Color(0xFF007AFF)
-        )
-        MenuOption(
-            iconId = R.drawable.iconcerrarsesion,
-            text = "Consulta 6",
-            textColor = Color(0xFF007AFF)
-        )
-        MenuOption(
-            iconId = R.drawable.iconcerrarsesion,
-            text = "Consulta 7",
-            textColor = Color(0xFF007AFF)
-        )
-        MenuOption(
-            iconId = R.drawable.iconcerrarsesion,
-            text = "Consulta 8",
-            textColor = Color(0xFF007AFF)
-        )
+        Text(text = "Consulta 1", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
     }
-    Spacer(modifier = Modifier.height(1.dp))
-//    // Nombre de la empresa
-//    Text(
-//        text = "SoftDevelopers",
-//        fontSize = 18.sp,
-//        color = Color.Blue,
-//        textAlign = TextAlign.Center,
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .offset(y = 720.dp),
-//        fontFamily = CustomFont
-//    )
 }
 
-//Pantalla del menu
 @Composable
-fun ConsultasOption(iconId: Int, text: String, textColor: Color) {
-    Card(
-        shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, Color(0xFF007AFF)),
+fun Consulta2Screen() {
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .clickable { /* Acción al hacer clic en la opción */ },
-
-        ) {
-        // Caja interna con fondo blanco
-        Box(
-            modifier = Modifier
-                .background(Color.White)
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painter = painterResource(id = iconId),
-                    contentDescription = text,
-                    tint = Color.Unspecified,
-                    modifier = Modifier.size(48.dp)
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = text,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = textColor,
-                    fontFamily = CustomFont
-                )
-            }
-        }
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 2", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
     }
 }
+
+@Composable
+fun Consulta3Screen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(text = "Consulta 3", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
+    }
+}
+
+@Composable
+fun Consulta4Screen() {
+    Text("Contenido de Consulta 4")
+}
+
+@Composable
+fun Consulta5Screen() {
+    Text("Contenido de Consulta 5")
+}
+
+@Composable
+fun Consulta6Screen() {
+    Text("Contenido de Consulta 6")
+}
+
+@Composable
+fun Consulta7Screen() {
+    Text("Contenido de Consulta 7")
+}
+
+@Composable
+fun Consulta8Screen() {
+    Text("Contenido de Consulta 8")
+}
+
+@Composable
+fun Consulta9Screen() {
+    Text("Contenido de Consulta 9")
+}
+
+@Composable
+fun Consulta10Screen() {
+    Text("Contenido de Consulta 10")
+}
+
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {
     TechBridge_composeTheme {
-        //MenuScreen()
-        ConsultasScreen()
+        //MainScreen()
+        ConsultasMongoScreen()
     }
 }
