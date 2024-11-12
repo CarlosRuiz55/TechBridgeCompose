@@ -68,7 +68,7 @@ fun ProjectItem(
                 Text(
                     text = "Ganancia: $margenGanancia",
                     fontSize = 14.sp,
-                    color = Color(0xFF007AFF)
+                    color = if (margenGanancia <= 10) Color.Red else Color.Blue
                 )
                 Spacer(modifier = Modifier.height(10.dp))
             }

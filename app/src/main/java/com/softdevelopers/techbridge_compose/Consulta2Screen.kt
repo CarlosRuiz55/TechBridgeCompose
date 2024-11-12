@@ -1,28 +1,28 @@
 package com.softdevelopers.techbridge_compose
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import com.softdevelopers.techbridge_compose.ui.theme.TechBridge_composeTheme
 
 @Composable
-fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel()) {
+fun Consulta2Screen(viewModel: Consulta2ViewModel = viewModel()) {
     // Llama a `fetchProjects` solo una vez cuando se crea la composición
     LaunchedEffect(Unit) {
         viewModel.fetchProjects()
@@ -38,7 +38,7 @@ fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel()) {
             .padding(16.dp)
     ) {
         Text(
-            text = "Top 5 Proyectos Más Caros 2024-2025 por Margen de Ganancia",
+            text = "Proyectos con un margen de ganancia mayor a 10,000 que se encuentran en estado Finalizado",
             fontSize = 18.sp,
             color = Color(0xFF007AFF),
             fontFamily = CustomFont,
@@ -64,12 +64,11 @@ fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel()) {
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(projects) { project ->
-                    ProjectItem(
+                    ProjectItem2(
                         proyectoId = project.proyecto_id,
                         nombreProyecto = project.nombre_proyecto,
                         fechaInicio = project.fecha_inicio,
-                        fechaFin = project.fecha_fin,
-                        margenGanancia = project.margen_ganancia
+                        estado = project.estado
                     )
                 }
             }
