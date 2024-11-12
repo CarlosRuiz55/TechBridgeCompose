@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
@@ -44,6 +46,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,13 +67,25 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.softdevelopers.techbridge_compose.ui.theme.TechBridge_composeTheme
 import com.softdevelopers.techbridge_compose.ui.theme.lilitaone
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -554,122 +569,6 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
                     color = textColor,
                     fontFamily = CustomFont
                 )
-            }
-        }
-    }
-}
-
-@Composable
-fun Consulta1Screen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp)
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.iconback),
-            contentDescription = "Back",
-            tint = Color(0xFF007AFF),
-            modifier = Modifier
-                .size(36.dp)
-                .align(Alignment.Start)
-                .offset(y = 30.dp)
-                .clickable { }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "Top 5 Proyectos Más Caros 2024-2025 por Margen de Ganancia",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF007AFF),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 40.dp) // Ajusta el valor según sea necesario
-                .align(Alignment.End)
-                .offset(y = -20.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(bottom = 16.dp)
-        ) {
-            items(10) { // Cambia este valor según la cantidad de datos
-                ProjectItem(
-                    proyectoId = "proj010",
-                    nombreProyecto = "SmartHome",
-                    fechaInicio = "2024-08-01",
-                    fechaFin = "2025-04-01",
-                    margenGanancia = 23000
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun ProjectItem(
-    proyectoId: String,
-    nombreProyecto: String,
-    fechaInicio: String,
-    fechaFin: String,
-    margenGanancia: Int
-) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 8.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0)),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.iconempleado), // Usa tu propio ícono de empleado
-                contentDescription = "Empleado",
-                modifier = Modifier
-                    .size(48.dp)
-                    .padding(end = 16.dp)
-            )
-
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = nombreProyecto,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF333333)
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    text = "ID: $proyectoId",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666)
-                )
-
-                Text(
-                    text = "Inicio: $fechaInicio - Fin: $fechaFin",
-                    fontSize = 14.sp,
-                    color = Color(0xFF666666)
-                )
-
-                Text(
-                    text = "Ganancia: $margenGanancia",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = Color(0xFF007AFF)
-                )
-                Spacer(modifier = Modifier.height(10.dp))
             }
         }
     }

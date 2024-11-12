@@ -60,6 +60,18 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation("androidx.navigation:navigation-compose:2.5.3")
+    // Retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+// Coroutines
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    // https://mvnrepository.com/artifact/io.coil-kt/coil-compose
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.0" )// Ajusta la versión según sea necesario
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
