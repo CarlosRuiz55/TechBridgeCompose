@@ -218,8 +218,11 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF007AFF),
                     unfocusedBorderColor = Color.Gray
-                )
+                ),
+                textStyle = TextStyle(color = Color.Black)  // Cambiar color del texto a negro
             )
+
+
 
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -244,7 +247,9 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFF007AFF),
                     unfocusedBorderColor = Color.Gray
-                )
+                ),
+                textStyle = TextStyle(color = Color.Black)
+
             )
 
             Spacer(modifier = Modifier.height(24.dp))
