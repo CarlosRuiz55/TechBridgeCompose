@@ -104,7 +104,7 @@ fun EmployeeItem(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = "Apellidos: $apellidos",
+                    text = "Apellido: $apellidos",
                     fontSize = 14.sp,
                     color = Color(0xFFD0D0D0),
                     modifier = Modifier

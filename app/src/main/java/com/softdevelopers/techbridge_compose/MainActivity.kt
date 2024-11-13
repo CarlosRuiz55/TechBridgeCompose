@@ -528,22 +528,6 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
 
 
 
-@Composable
-fun Consulta4Screen() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White)
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(text = "Consulta 4", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF007AFF))
-    }
-}
-
-
-
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun GreetingPreview() {

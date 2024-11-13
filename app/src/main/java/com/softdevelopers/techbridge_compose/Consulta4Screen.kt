@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun Consulta3Screen(viewModel: Consulta3ViewModel = viewModel()) {
+fun Consulta4Screen(viewModel: Consulta4ViewModel = viewModel()) {
     // Llama a `fetchEmployee` solo una vez cuando se crea la composición
     LaunchedEffect(Unit) {
         viewModel.fetchEmployee()
@@ -40,7 +40,7 @@ fun Consulta3Screen(viewModel: Consulta3ViewModel = viewModel()) {
             .padding(16.dp)
     ) {
         Text(
-            text = "Empleados que han trabajado mas de 100 horas",
+            text = "Empleados con salario superior a 2500 y más de 20 tareas completadas en proyectos",
             fontSize = 18.sp,
             color = Color(0xFF007AFF),
             fontFamily = CustomFont,
@@ -60,20 +60,22 @@ fun Consulta3Screen(viewModel: Consulta3ViewModel = viewModel()) {
                 modifier = Modifier.padding(top = 20.dp)
             )
         } else {
-            // Mostrar la lista de proyectos una vez que `projects` tenga datos
+            // Mostrar la lista de empleados una vez que `employee` tenga datos
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
-                items(employee) { employee ->
-                    EmployeeItem(
-                        employee_id = employee.employee_id,
-                        nombres = employee.nombres,
-                        apellidos = employee.apellidos,
-                        total_horas =  employee.total_horas
+                items(employee) { emp ->
+                    EmployeeItem2(
+                        employee_id = emp.employee_id,
+                        nombres = emp.nombres,
+                        apellidos = emp.apellidos,
+                        salario = emp.salario,
+                        participacion_proyectos = emp.participacion_proyectos // Pasa la lista aquí
                     )
                 }
             }
         }
     }
 }
+
