@@ -1,6 +1,7 @@
 package com.softdevelopers.techbridge_compose
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,6 +14,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,7 +24,7 @@ import androidx.navigation.NavController
 import com.softdevelopers.techbridge_compose.ui.theme.TechBridge_composeTheme
 
 @Composable
-fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel()) {
+fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel(),onBack: () -> Unit) {
     // Llama a `fetchProjects` solo una vez cuando se crea la composición
     LaunchedEffect(Unit) {
         viewModel.fetchProjects()
@@ -37,6 +39,17 @@ fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel()) {
             .background(Color.White)
             .padding(16.dp)
     ) {
+
+        Icon(
+            painter = painterResource(id = R.drawable.iconback),
+            contentDescription = "Back",
+            tint = Color(0xFF007AFF),
+            modifier = Modifier
+                .size(36.dp)
+                .align(Alignment.Start)
+                .offset(y = 20.dp)
+                .clickable {onBack()}
+        )
         Text(
             text = "Top 5 Proyectos Más Caros 2024-2025 por Margen de Ganancia",
             fontSize = 18.sp,

@@ -113,9 +113,8 @@ fun AppContent(modifier: Modifier = Modifier) {
     var isLoggedIn by remember { mutableStateOf(false) }
     var showConsultasScreen by remember { mutableStateOf(false) }
 
-
     LaunchedEffect(Unit) {
-        delay(3000)
+        delay(2000)
         showWelcomeScreen = false
     }
 
@@ -123,16 +122,15 @@ fun AppContent(modifier: Modifier = Modifier) {
         showWelcomeScreen -> MainScreen()
         showConsultasScreen -> ConsultasMongoScreen(
             onBack = { showConsultasScreen = false } // Regresa al MenuScreen
-
         )
-
-        // Pantalla de consultas
         isLoggedIn -> MenuScreen(
-            onConsultasClick = { showConsultasScreen = true } // Navega a ConsultasScreen
+            onConsultasClick = { showConsultasScreen = true }, // Navega a ConsultasScreen
+            onLogoutClick = { isLoggedIn = false } // Cerrar sesión y volver a LoginScreen
         )
         else -> LoginScreen(onLoginSuccess = { isLoggedIn = true })
     }
 }
+
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
@@ -295,7 +293,7 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
 }
 
 @Composable
-fun MenuScreen(onConsultasClick: () -> Unit) {
+fun MenuScreen(onConsultasClick: () -> Unit, onLogoutClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -341,13 +339,6 @@ fun MenuScreen(onConsultasClick: () -> Unit) {
         )
 
         MenuOption(
-            iconId = R.drawable.iconconfig,
-            text = "Configuraciones",
-            textColor = Color(0xFF007AFF),
-            onClick = onConsultasClick // Llama a ConsultasScreen al hacer clic
-        )
-
-        MenuOption(
             iconId = R.drawable.iconacerca,
             text = "Acerca De",
             textColor = Color(0xFF007AFF),
@@ -357,7 +348,8 @@ fun MenuScreen(onConsultasClick: () -> Unit) {
         MenuOption(
             iconId = R.drawable.iconcerrarsesion,
             text = "Cerrar Sesión",
-            textColor = Color.Red
+            textColor = Color.Red,
+            onClick = onLogoutClick
         )
     }
 }
@@ -407,10 +399,10 @@ fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
     var selectedScreen by remember { mutableStateOf<String?>(null) }
 
     when (selectedScreen) {
-        "Consulta1" -> Consulta1Screen()
-        "Consulta2" -> Consulta2Screen()
-        "Consulta3" -> Consulta3Screen()
-        "Consulta4" -> Consulta4Screen()
+        "Consulta1" -> Consulta1Screen(onBack = { selectedScreen = null })
+        "Consulta2" -> Consulta2Screen(onBack = { selectedScreen = null })
+        "Consulta3" -> Consulta3Screen(onBack = { selectedScreen = null })
+        "Consulta4" -> Consulta4Screen(onBack = { selectedScreen = null })
 
         else -> {
             Column(
@@ -441,7 +433,7 @@ fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -450,33 +442,33 @@ fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                 ) {
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.icondashboard,
-                            text = "Consultas1",
-                            textColor = Color(0xFF007AFF),
+                            iconId = R.drawable.iconconsulta1,
+                            text = "Top 5 proyectos más caros 2024-2025 por margen de ganancia",
+                            textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta1" }
                         )
                     }
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.iconconfig,
-                            text = "Consulta2",
-                            textColor = Color(0xFF007AFF),
+                            iconId = R.drawable.iconconsulta2,
+                            text = "Proyectos con un margen de ganancia mayor a 10,000 que se encuentran en estado finalizado",
+                            textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta2" }
                         )
                     }
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.iconacerca,
-                            text = "Consulta3",
-                            textColor = Color(0xFF007AFF),
+                            iconId = R.drawable.iconconsulta3,
+                            text = "Empleados que han trabajado mas de 100 horas",
+                            textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta3" }
                         )
                     }
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.iconacerca,
-                            text = "Consulta4",
-                            textColor = Color(0xFF007AFF),
+                            iconId = R.drawable.iconconsulta4,
+                            text = "Empleados con salario superior a 2500 y más de 20 tareas completadas en proyectos",
+                            textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta4" }
                         )
                     }
@@ -490,7 +482,7 @@ fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
 fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> Unit = {}) {
     Card(
         shape = RoundedCornerShape(16.dp),
-        border = BorderStroke(2.dp, Color(0xFF007AFF)),
+        border = BorderStroke(2.dp, Color(43, 192, 147)),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
@@ -517,9 +509,10 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
                 Text(
                     text = text,
                     fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Normal,
                     color = textColor,
-                    fontFamily = CustomFont
+                    fontFamily = CustomFont,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -533,6 +526,8 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
 fun GreetingPreview() {
     TechBridge_composeTheme {
         //MainScreen()
-        Consulta1Screen()
+        Consulta4Screen{
+
+        }
     }
 }
