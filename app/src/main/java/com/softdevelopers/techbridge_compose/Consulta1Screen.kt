@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,13 +43,13 @@ fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel(),onBack: () -> Un
     ) {
 
         Icon(
-            painter = painterResource(id = R.drawable.iconback),
+            imageVector = Icons.Default.ArrowBack,
             contentDescription = "Back",
             tint = Color(0xFF007AFF),
             modifier = Modifier
                 .size(36.dp)
                 .align(Alignment.Start)
-                .offset(y = 20.dp)
+                .offset(y = 30.dp)
                 .clickable {onBack()}
         )
         Text(
@@ -57,8 +59,8 @@ fun Consulta1Screen(viewModel: Consulta1ViewModel = viewModel(),onBack: () -> Un
             fontFamily = CustomFont,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
-                .offset(y = 30.dp)
+                .padding(start = 50.dp)
+                .offset(y = 0.dp)
         )
         Spacer(modifier = Modifier.height(24.dp))
 

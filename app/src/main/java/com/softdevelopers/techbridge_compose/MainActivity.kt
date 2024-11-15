@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -37,13 +38,16 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextFieldDefaults.outlinedTextFieldColors
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -109,28 +113,43 @@ val CustomFont = FontFamily(
 
 @Composable
 fun AppContent(modifier: Modifier = Modifier) {
-    var showWelcomeScreen by remember { mutableStateOf(true) }
     var isLoggedIn by remember { mutableStateOf(false) }
-    var showConsultasScreen by remember { mutableStateOf(false) }
+    val navController = rememberNavController()
 
-    LaunchedEffect(Unit) {
-        delay(2000)
-        showWelcomeScreen = false
-    }
-
-    when {
-        showWelcomeScreen -> MainScreen()
-        showConsultasScreen -> ConsultasMongoScreen(
-            onBack = { showConsultasScreen = false } // Regresa al MenuScreen
-        )
-        isLoggedIn -> MenuScreen(
-            onConsultasClick = { showConsultasScreen = true }, // Navega a ConsultasScreen
-            onLogoutClick = { isLoggedIn = false } // Cerrar sesión y volver a LoginScreen
-        )
-        else -> LoginScreen(onLoginSuccess = { isLoggedIn = true })
+    NavHost(navController = navController, startDestination = if (isLoggedIn) "menu" else "login") {
+        composable("login") {
+            LoginScreen(onLoginSuccess = {
+                isLoggedIn = true
+                navController.navigate("menu") {
+                    // Limpiar la pila para evitar que el usuario vuelva a la pantalla de login
+                    popUpTo("login") { inclusive = true }
+                }
+            })
+        }
+        composable("menu") {
+            MenuScreen(
+                onConsultasClick = { navController.navigate("consultas") },
+                onLogoutClick = {
+                    isLoggedIn = false
+                    navController.navigate("login") {
+                        popUpTo("menu") { inclusive = true }
+                    }
+                },
+                onConsultasTabularesClick = { navController.navigate("consultatabular") },
+                onAcercaClick = { navController.navigate("acerca") }
+            )
+        }
+        composable("acerca") {
+            AcercadeScreen(onBackClick = { navController.popBackStack() })
+        }
+        composable("consultatabular") {
+            ConsultasTabularScreen(onBack = { navController.popBackStack() })
+        }
+        composable("consultas") {
+            ConsultasMongoScreen(onBack = { navController.popBackStack() })
+        }
     }
 }
-
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
@@ -293,7 +312,7 @@ fun LoginScreen(modifier: Modifier = Modifier, onLoginSuccess: () -> Unit) {
 }
 
 @Composable
-fun MenuScreen(onConsultasClick: () -> Unit, onLogoutClick: () -> Unit) {
+fun MenuScreen(onConsultasClick: () -> Unit, onLogoutClick: () -> Unit,onAcercaClick: () -> Unit, onConsultasTabularesClick : () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -302,18 +321,8 @@ fun MenuScreen(onConsultasClick: () -> Unit, onLogoutClick: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.iconback),
-            contentDescription = "Back",
-            tint = Color(0xFF007AFF),
-            modifier = Modifier
-                .size(36.dp)
-                .align(Alignment.Start)
-                .offset(y = 30.dp)
-                .clickable { /* Acción para retroceder */ }
-        )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(76.dp))
 
         Text(
             text = "Menu",
@@ -335,13 +344,14 @@ fun MenuScreen(onConsultasClick: () -> Unit, onLogoutClick: () -> Unit) {
             iconId = R.drawable.iconssas,
             text = "Consultas del modelo tabular",
             textColor = Color(0xFF007AFF),
-            onClick = onConsultasClick // Llama a ConsultasScreen al hacer clic
+            onClick = onConsultasTabularesClick // Llama a ConsultasScreen al hacer clic
         )
 
         MenuOption(
             iconId = R.drawable.iconacerca,
             text = "Acerca De",
             textColor = Color(0xFF007AFF),
+            onClick = onAcercaClick // Navegación a AcercadeScreen
 
             )
 
@@ -412,7 +422,7 @@ fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                     .padding(16.dp)
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.iconback),
+                    imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back",
                     tint = Color(0xFF007AFF),
                     modifier = Modifier
@@ -518,6 +528,181 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
         }
     }
 }
+@Composable
+fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
+    var selectedScreen by remember { mutableStateOf<String?>(null) }
+
+    when (selectedScreen) {
+        "Consulta1" -> Consulta1Screen(onBack = { selectedScreen = null })
+        "Consulta2" -> Consulta2Screen(onBack = { selectedScreen = null })
+        "Consulta3" -> Consulta3Screen(onBack = { selectedScreen = null })
+        "Consulta4" -> Consulta4Screen(onBack = { selectedScreen = null })
+
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+                    .padding(16.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color(0xFF007AFF),
+                    modifier = Modifier
+                        .size(36.dp)
+                        .align(Alignment.Start)
+                        .offset(y = 30.dp)
+                        .clickable { onBack() }
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "Consultas tabulares",
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF007AFF),
+                    fontFamily = CustomFont,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    contentPadding = PaddingValues(bottom = 16.dp)
+                ) {
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconconsulta1,
+                            text = "Top 5 proyectos más caros 2024-2025 por margen de ganancia",
+                            textColor = Color(11,11,11 ),
+                            onClick = { selectedScreen = "Consulta1" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconconsulta2,
+                            text = "Proyectos con un margen de ganancia mayor a 10,000 que se encuentran en estado finalizado",
+                            textColor = Color(11,11,11 ),
+                            onClick = { selectedScreen = "Consulta2" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconconsulta3,
+                            text = "Empleados que han trabajado mas de 100 horas",
+                            textColor = Color(11,11,11 ),
+                            onClick = { selectedScreen = "Consulta3" }
+                        )
+                    }
+                    item {
+                        ConsultaOption(
+                            iconId = R.drawable.iconconsulta4,
+                            text = "Empleados con salario superior a 2500 y más de 20 tareas completadas en proyectos",
+                            textColor = Color(11,11,11 ),
+                            onClick = { selectedScreen = "Consulta4" }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun AcercadeScreen(onBackClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(16.dp)
+    ) {
+        // Botón de retroceso
+        Icon(
+            imageVector = Icons.Default.ArrowBack,
+            contentDescription = "Back",
+            tint = Color(0xFF007AFF),
+            modifier = Modifier
+                .size(36.dp)
+                .align(Alignment.Start)
+                .offset(y = 30.dp)
+                .clickable { onBackClick() }
+        )
+
+        // Título de la pantalla
+        Text(
+            text = "Acerca de",
+            fontFamily = CustomFont,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF007AFF),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 50.dp)
+                .offset(y = 0.dp)
+        )
+
+        Spacer(modifier = Modifier.height(70.dp))
+
+        // Icono de la aplicación
+        Icon(
+            painter = painterResource(id = R.drawable.logo1),
+            contentDescription = "Logo",
+            tint = Color.Black,
+            modifier = Modifier
+                .width(286.dp)
+                .height(118.dp)
+                .align(Alignment.CenterHorizontally)
+        )
+
+        Text(
+            text = "Versión 0.0.1",
+            fontSize = 16.sp,
+            color = Color.Gray,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Descripción de la aplicación
+        Text(
+            text = "TechBridge es una aplicación desarrollada por SoftDevelopers que proporciona información esencial para la toma de decisiones empresariales. Esta es la primera versión de la aplicación, diseñada para ayudar a la empresa a optimizar sus procesos mediante el acceso rápido y sencillo a datos clave.",
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            color = Color.DarkGray,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Objetivo de la aplicación
+        Text(
+            text = "Nuestro objetivo es ofrecer una plataforma intuitiva que permita a los usuarios tomar decisiones informadas basadas en datos precisos y actualizados.",
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center,
+            color = Color.DarkGray,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(220.dp))
+
+        // Nombre de la empresa
+        Text(
+            text = "SoftDevelopers",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.SemiBold,
+            color = Color(0xFF3A86FF),
+            fontFamily = CustomFont,
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+    }
+}
+
+
+
 
 
 
@@ -526,8 +711,10 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
 fun GreetingPreview() {
     TechBridge_composeTheme {
         //MainScreen()
-        Consulta4Screen{
+
+        Consulta4Screen {
 
         }
+
     }
 }

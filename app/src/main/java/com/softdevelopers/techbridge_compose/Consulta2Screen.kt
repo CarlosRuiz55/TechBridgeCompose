@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +45,7 @@ fun Consulta2Screen(viewModel: Consulta2ViewModel = viewModel(),onBack: () -> Un
             .padding(16.dp)
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.iconback),
+            imageVector = Icons.Default.ArrowBack,
             contentDescription = "Back",
             tint = Color(0xFF007AFF),
             modifier = Modifier
@@ -59,8 +61,8 @@ fun Consulta2Screen(viewModel: Consulta2ViewModel = viewModel(),onBack: () -> Un
             fontFamily = CustomFont,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
-                .offset(y = 30.dp)
+                .padding(start = 50.dp)
+                .offset(y = 0.dp)
         )
         Spacer(modifier = Modifier.height(24.dp))
 
