@@ -533,10 +533,8 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
     var selectedScreen by remember { mutableStateOf<String?>(null) }
 
     when (selectedScreen) {
-        "Consulta1" -> Consulta1Screen(onBack = { selectedScreen = null })
-        "Consulta2" -> Consulta2Screen(onBack = { selectedScreen = null })
-        "Consulta3" -> Consulta3Screen(onBack = { selectedScreen = null })
-        "Consulta4" -> Consulta4Screen(onBack = { selectedScreen = null })
+        "Consulta1" -> Consulta7Screen(onBack = { selectedScreen = null })
+
 
         else -> {
             Column(
@@ -555,7 +553,7 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                         .offset(y = 30.dp)
                         .clickable { onBack() }
                 )
-                
+
                 Text(
                     text = "Consultas tabulares",
                     fontSize = 24.sp,
@@ -577,7 +575,7 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                     item {
                         ConsultaOption(
                             iconId = R.drawable.iconconsulta1,
-                            text = "Top 5 proyectos más caros 2024-2025 por margen de ganancia",
+                            text = "Total de ganancia y cantidad de pagos realizados",
                             textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta1" }
                         )
