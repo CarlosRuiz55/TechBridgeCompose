@@ -432,15 +432,15 @@ fun ConsultasMongoScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                         .clickable { onBack() }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
                 Text(
-                    text = "Consultas",
+                    text = "Consultas no relacionales",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF007AFF),
                     fontFamily = CustomFont,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .padding(start = 50.dp)
+                        .offset(y = 0.dp),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
@@ -515,7 +515,7 @@ fun ConsultaOption(iconId: Int, text: String, textColor: Color, onClick: () -> U
                     tint = Color.Unspecified,
                     modifier = Modifier.size(48.dp)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = text,
                     fontSize = 18.sp,
@@ -555,16 +555,16 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                         .offset(y = 30.dp)
                         .clickable { onBack() }
                 )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+                
                 Text(
                     text = "Consultas tabulares",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF007AFF),
                     fontFamily = CustomFont,
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .padding(start = 50.dp)
+                        .offset(y = 0.dp),
                 )
 
                 Spacer(modifier = Modifier.height(10.dp))
