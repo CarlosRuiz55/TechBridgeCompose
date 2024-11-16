@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -113,43 +114,60 @@ val CustomFont = FontFamily(
 
 @Composable
 fun AppContent(modifier: Modifier = Modifier) {
+    var showWelcomeScreen by remember { mutableStateOf(true) }
     var isLoggedIn by remember { mutableStateOf(false) }
     val navController = rememberNavController()
 
-    NavHost(navController = navController, startDestination = if (isLoggedIn) "menu" else "login") {
-        composable("login") {
-            LoginScreen(onLoginSuccess = {
-                isLoggedIn = true
-                navController.navigate("menu") {
-                    // Limpiar la pila para evitar que el usuario vuelva a la pantalla de login
-                    popUpTo("login") { inclusive = true }
+    LaunchedEffect(Unit) {
+        delay(3000)
+        showWelcomeScreen = false
+    }
+
+    Crossfade(targetState = showWelcomeScreen) { isWelcome ->
+        if (isWelcome) {
+            MainScreen()
+        } else {
+            NavHost(
+                navController = navController,
+                startDestination = if (isLoggedIn) "menu" else "login"
+            ) {
+                composable("login") {
+                    LoginScreen(onLoginSuccess = {
+                        isLoggedIn = true
+                        navController.navigate("menu") {
+                            // Limpiar la pila para evitar que el usuario vuelva a la pantalla de login
+                            popUpTo("login") { inclusive = true }
+                        }
+                    })
                 }
-            })
-        }
-        composable("menu") {
-            MenuScreen(
-                onConsultasClick = { navController.navigate("consultas") },
-                onLogoutClick = {
-                    isLoggedIn = false
-                    navController.navigate("login") {
-                        popUpTo("menu") { inclusive = true }
-                    }
-                },
-                onConsultasTabularesClick = { navController.navigate("consultatabular") },
-                onAcercaClick = { navController.navigate("acerca") }
-            )
-        }
-        composable("acerca") {
-            AcercadeScreen(onBackClick = { navController.popBackStack() })
-        }
-        composable("consultatabular") {
-            ConsultasTabularScreen(onBack = { navController.popBackStack() })
-        }
-        composable("consultas") {
-            ConsultasMongoScreen(onBack = { navController.popBackStack() })
+                composable("menu") {
+                    MenuScreen(
+                        onConsultasClick = { navController.navigate("consultas") },
+                        onLogoutClick = {
+                            isLoggedIn = false
+                            navController.navigate("login") {
+                                popUpTo("menu") { inclusive = true }
+                            }
+                        },
+                        onConsultasTabularesClick = { navController.navigate("consultatabular") },
+                        onAcercaClick = { navController.navigate("acerca") }
+                    )
+                }
+                composable("acerca") {
+                    AcercadeScreen(onBackClick = { navController.popBackStack() })
+                }
+                composable("consultatabular") {
+                    ConsultasTabularScreen(onBack = { navController.popBackStack() })
+                }
+                composable("consultas") {
+                    ConsultasMongoScreen(onBack = { navController.popBackStack() })
+                }
+            }
         }
     }
 }
+
+
 
 @Composable
 fun MainScreen(modifier: Modifier = Modifier) {
@@ -186,6 +204,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -698,11 +717,6 @@ fun AcercadeScreen(onBackClick: () -> Unit) {
         )
     }
 }
-
-
-
-
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
