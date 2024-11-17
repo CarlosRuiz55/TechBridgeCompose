@@ -553,6 +553,7 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
 
     when (selectedScreen) {
         "Consulta1" -> Consulta7Screen(onBack = { selectedScreen = null })
+        "Consulta2" -> Consulta6Screen(onBack = { selectedScreen = null })
 
 
         else -> {
@@ -593,7 +594,7 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                 ) {
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.iconconsulta1,
+                            iconId = R.drawable.iconganancia1,
                             text = "Total de ganancia y cantidad de pagos realizados",
                             textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta1" }
@@ -601,28 +602,22 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                     }
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.iconconsulta2,
-                            text = "Proyectos con un margen de ganancia mayor a 10,000 que se encuentran en estado finalizado",
+                            iconId = R.drawable.iconganancia2,
+                            text = "Total de ingresos por trimestre",
                             textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta2" }
                         )
                     }
                     item {
                         ConsultaOption(
-                            iconId = R.drawable.iconconsulta3,
+                            iconId = R.drawable.iconganancia3,
                             text = "Empleados que han trabajado mas de 100 horas",
                             textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta3" }
                         )
                     }
-                    item {
-                        ConsultaOption(
-                            iconId = R.drawable.iconconsulta4,
-                            text = "Empleados con salario superior a 2500 y más de 20 tareas completadas en proyectos",
-                            textColor = Color(11,11,11 ),
-                            onClick = { selectedScreen = "Consulta4" }
-                        )
-                    }
+
+
                 }
             }
         }

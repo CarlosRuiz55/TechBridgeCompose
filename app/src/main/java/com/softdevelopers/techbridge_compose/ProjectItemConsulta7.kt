@@ -78,7 +78,7 @@ fun ProjectItem7(
             ) {
                 // Ganancia
                 Text(
-                    text = "Ganancia: $Sum_of_Profit_Margin_Without_Nulls",
+                    text = "Ganancia: $$Sum_of_Profit_Margin_Without_Nulls",
                     fontSize = 18.sp,
                     color = Color(0xFF4CAF50) ,
                     fontWeight = FontWeight.Bold,

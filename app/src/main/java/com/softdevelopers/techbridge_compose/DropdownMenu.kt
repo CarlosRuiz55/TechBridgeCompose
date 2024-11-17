@@ -64,3 +64,48 @@ fun DropdownMenu(
         }
     }
 }
+@Composable
+fun QuarterDropdownMenu(
+    modifier: Modifier = Modifier,
+    selectedQuarter: Int,
+    onQuarterSelected: (Int) -> Unit,
+    quarters: List<Int>
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Box(modifier = modifier) {
+        Text(
+            text = "Seleccionar Trimestre: Q$selectedQuarter",
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = !expanded }
+                .padding(16.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f), shape = MaterialTheme.shapes.medium)
+                .padding(16.dp),
+            style = MaterialTheme.typography.titleMedium.copy(
+                fontWeight = FontWeight.Bold,
+                color = Color.Black
+            )
+        )
+
+        androidx.compose.material3.DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .background(Color.White, shape = MaterialTheme.shapes.medium)
+        ) {
+            quarters.forEach { quarter ->
+                DropdownMenuItem(
+                    text = { Text("Q$quarter", style = MaterialTheme.typography.labelMedium.copy(color = Color.Blue)) },
+                    onClick = {
+                        onQuarterSelected(quarter)
+                        expanded = false
+                    },
+                    modifier = Modifier
+                        .background(color = Color.White)
+                        .padding(vertical = 8.dp)
+                )
+            }
+        }
+    }
+}

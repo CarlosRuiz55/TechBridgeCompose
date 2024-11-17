@@ -32,7 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
-fun Consulta7Screen(viewModel: Consulta7ViewModel = viewModel(), onBack: () -> Unit) {
+fun Consulta6Screen(viewModel: Consulta6ViewModel = viewModel(), onBack: () -> Unit) {
     // Llama a `fetchProyectos` solo una vez cuando se crea la composición
     LaunchedEffect(Unit) {
         viewModel.fetchProyecto()
@@ -61,7 +61,7 @@ fun Consulta7Screen(viewModel: Consulta7ViewModel = viewModel(), onBack: () -> U
                 .clickable { onBack() }
         )
         Text(
-            text = "Total de ganancia y cantidad de pagos realizados",
+            text = "Total de ingresos por trimestre",
             fontSize = 18.sp,
             color = Color(0xFF007AFF),
             fontFamily = CustomFont,
@@ -74,7 +74,7 @@ fun Consulta7Screen(viewModel: Consulta7ViewModel = viewModel(), onBack: () -> U
 
         // ComboBox for selecting year
         DropdownMenu(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(8.dp),
             selectedYear = selectedYear,
             onYearSelected = { selectedYear = it },
             years = years
@@ -99,11 +99,10 @@ fun Consulta7Screen(viewModel: Consulta7ViewModel = viewModel(), onBack: () -> U
                 contentPadding = PaddingValues(bottom = 16.dp)
             ) {
                 items(filteredProjects) { proye ->
-                    ProjectItem7(
+                    ProjectItem6(
                         Calendar_Hierarchy = proye.Calendar_Hierarchy,
                         Year = proye.Year,
                         Sum_of_Profit_Margin_Without_Nulls = proye.Sum_of_Profit_Margin_Without_Nulls,
-                        Count_of_Payment_Amount_Without_Nulls = proye.Count_of_Payment_Amount_Without_Nulls
                     )
                 }
             }
