@@ -554,6 +554,7 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
     when (selectedScreen) {
         "Consulta1" -> Consulta7Screen(onBack = { selectedScreen = null })
         "Consulta2" -> Consulta6Screen(onBack = { selectedScreen = null })
+        "Consulta3" -> Consulta5Screen(onBack = { selectedScreen = null })
 
 
         else -> {
@@ -611,7 +612,7 @@ fun ConsultasTabularScreen(onBack: () -> Unit, onClick: () -> Unit = {} ) {
                     item {
                         ConsultaOption(
                             iconId = R.drawable.iconganancia3,
-                            text = "Empleados que han trabajado mas de 100 horas",
+                            text = "10 proyectos con mayor ganancia",
                             textColor = Color(11,11,11 ),
                             onClick = { selectedScreen = "Consulta3" }
                         )

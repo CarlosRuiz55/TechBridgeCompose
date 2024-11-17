@@ -69,7 +69,13 @@ dependencies {
     // https://mvnrepository.com/artifact/io.coil-kt/coil-compose
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-    implementation ("androidx.compose.runtime:runtime-livedata:1.5.0" )// Ajusta la versión según sea necesario
+    implementation ("androidx.compose.runtime:runtime-livedata:1.5.0" )
+    // Ajusta la versión según sea necesario
+
+    implementation ("androidx.compose.material:material:1.4.3" )
+    implementation ("androidx.compose.ui:ui:1.4.3" )
+    implementation ("androidx.compose.ui:ui-tooling:1.4.3" )
+    implementation ("androidx.compose.foundation:foundation:1.4.3")
 
 
     testImplementation(libs.junit)
