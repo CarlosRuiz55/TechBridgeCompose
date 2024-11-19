@@ -89,7 +89,7 @@ fun ProjectItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = "Ganancia: $margenGanancia%",
+                        text = "Ganancia: $margenGanancia",
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = if (margenGanancia <= 10) Color.Red else Color(0xFF1E88E5)

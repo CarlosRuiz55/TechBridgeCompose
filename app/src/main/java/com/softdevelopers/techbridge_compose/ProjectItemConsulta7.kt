@@ -35,10 +35,9 @@ fun ProjectItem7(
     Count_of_Payment_Amount_Without_Nulls: Int
 ) {
     val imagesList = listOf(
-        R.drawable.iconemployee1,
-        R.drawable.iconemployee2,
-        R.drawable.iconemployee3,
-        R.drawable.iconemployee4
+        R.drawable.iconganancia1,
+        R.drawable.iconganancia2,
+        R.drawable.iconganancia3,
     )
 
     val randomImage = imagesList.random()
@@ -111,9 +110,6 @@ fun ProjectItem7(
                     modifier = Modifier
                         .padding(bottom = 8.dp)
                 )
-
-
-
 
             }
         }
